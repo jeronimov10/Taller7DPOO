@@ -7,9 +7,16 @@ import uniandes.dpoo.taller7.modelo.Tablero;
 
 import javax.swing.JPanel;
 
+
+
+
 public class panelC extends JPanel implements MouseListener {
 	
 	int tamanhoT;
+	
+	private Tablero tablero;
+	
+	
 	
 	public panelC(Tablero tablero, int tamanhoT) {
 		
@@ -21,6 +28,11 @@ public class panelC extends JPanel implements MouseListener {
 	
 	public void crearTablero (Tablero tablero, int tamanhoT) {
 		setLayout(new GridLayout(tamanhoT, tamanhoT));
+	}
+	
+	public void actualizarTablero(Tablero tablero) {
+		this.tablero = tablero;
+		
 	}
 	
 	@Override

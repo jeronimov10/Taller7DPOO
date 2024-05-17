@@ -11,24 +11,35 @@ import javax.swing.JPanel;
 
 public class panelE extends JPanel implements ActionListener {
 	
-	JButton Nuevo;
-	JButton Reinciar;
-	JButton Top10;
-	JButton ChangeJugador;
+	private JButton Nuevo;
+	private JButton Reinciar;
+	private JButton Top10;
+	private JButton ChangeJugador;
+	private interfazPrincipale mainFrame;
 	
 	
 	
-	public panelE() {
+	
+	public panelE(interfazPrincipale mainFrame) {
+		this.mainFrame = mainFrame;
+		
 		
 		setLayout(new GridLayout(9, 1));
 		Nuevo = new JButton("Nuevo");
 		Nuevo.setBackground(new Color(41,137,223));
+		Nuevo.addActionListener(this);
+		
 		Reinciar = new JButton("Reinciar");
 		Reinciar.setBackground(new Color(41,137,223));
+		Reinciar.addActionListener(this);
+		
 		Top10 = new JButton("Top 10");
 		Top10.setBackground(new Color(41,137,223));
+		Top10.addActionListener(this);
+		
 		ChangeJugador = new JButton("Cambiar Jugador");
 		ChangeJugador.setBackground(new Color(41,137,223));
+		ChangeJugador.addActionListener(this);
 		
 		add (new JLabel(" "));
 		add (Nuevo);
@@ -47,7 +58,21 @@ public class panelE extends JPanel implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stu
+		
+		if (e.getSource() == ChangeJugador) {
+			DialogoCambiarJugador d = new DialogoCambiarJugador(mainFrame);
+			d.setVisible(true);
+			
+			if(d.Aceptado()) {
+				String nuevoNombre = d.getNombreJugador();
+				mainFrame.actualizarNombreJugador(nuevoNombre);
+			}
+			
+			
+		}
+			
+		
+		
 		
 	}
 	

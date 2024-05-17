@@ -6,13 +6,14 @@ import java.awt.GridLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class panelS extends JPanel {
 	
 	private JLabel jugadas;
-	private JLabel valorJugadas;
+	private JTextField valorJugadas;
 	private JLabel jugador;
-	private JLabel nombreJugador;
+	private JTextField nombreJugador;
 	
 	
 	
@@ -21,10 +22,15 @@ public class panelS extends JPanel {
 		setLayout(new GridLayout(1, 4));
 		
 		jugadas = new JLabel("Jugadas: ");
-		valorJugadas = new JLabel("0");
-		
+		valorJugadas = new JTextField("0");
+		valorJugadas.setEditable(false);
+	
 		jugador = new JLabel("Jugador: ");
-		nombreJugador = new JLabel(njugador);
+		nombreJugador = new JTextField(njugador);
+		nombreJugador.setEditable(false);
+		
+		
+		
 		
 		add(jugadas);
 		add(valorJugadas);
@@ -32,6 +38,12 @@ public class panelS extends JPanel {
 		add(nombreJugador);
 		
 	
+	}
+	
+	
+	public void actualizarNombreJugador(String nuevoNombre) {
+		
+		nombreJugador.setText(nuevoNombre);
 	}
 	
 
