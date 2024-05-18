@@ -8,6 +8,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
 import uniandes.dpoo.taller7.modelo.Tablero;
+import uniandes.dpoo.taller7.modelo.Top10;
+
 
 public class interfazPrincipale extends JFrame {
 	
@@ -19,6 +21,7 @@ public class interfazPrincipale extends JFrame {
 	String Njugador = "jugador";
 	private int tamanhoTablero = 5;
 	private int dificultad = 1;
+	private Top10 top10;
 	private JComboBox<String> tamanho;
 
 	
@@ -44,10 +47,9 @@ public class interfazPrincipale extends JFrame {
 		panelS = new panelS(Njugador);
 		add(panelS, BorderLayout.SOUTH);
 		
+		top10 = new Top10();
 		
-		
-		
-		
+	
 		
 	}
 	
@@ -83,7 +85,7 @@ public class interfazPrincipale extends JFrame {
 		this.tamanhoTablero = nuevoTamanho;
 		tablero = new Tablero(tamanhoTablero);
 		
-		panelC.crearTablero(tablero, tamanhoTablero);
+		panelC.crearTablero();
 		
 		
 		revalidate();
@@ -99,6 +101,17 @@ public class interfazPrincipale extends JFrame {
 	public void actualizarNombreJugador(String NuevoNombre) {
 		Njugador = NuevoNombre;
 		panelS.actualizarNombreJugador(NuevoNombre);
+		
+		if (tablero.tableroIluminado()) {
+			int puntaje = tablero.calcularPuntaje();
+			top10.agregarRegistro(NuevoNombre, puntaje);
+		}
+		tablero.reiniciar();
+	}
+	
+	public Top10 getTop10() {
+		
+		return top10;
 	}
 
 
