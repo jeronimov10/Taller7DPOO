@@ -18,6 +18,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import uniandes.dpoo.taller7.interfaz1.panelC;
+import uniandes.dpoo.taller7.interfaz1.cambioEstado;
 
 public class panelE extends JPanel implements ActionListener {
 	
@@ -27,6 +29,8 @@ public class panelE extends JPanel implements ActionListener {
 	private JButton ChangeJugador;
 	private interfazPrincipale mainFrame;
 	private JComboBox<String> tamanho;
+	private panelC panelc;
+	private cambioEstado cambioEstadoI;
 	
 	
 	
@@ -87,6 +91,11 @@ public class panelE extends JPanel implements ActionListener {
 			
 		} else if (e.getSource() == Reinciar) {
 			mainFrame.reiniciarJuego();
+		} else if(e.getSource()== Nuevo) {
+			panelc.crearTablero(cambioEstadoI);
+			
+			
+			
 		}
 			
 		

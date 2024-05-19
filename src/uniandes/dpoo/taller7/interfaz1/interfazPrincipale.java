@@ -23,6 +23,7 @@ public class interfazPrincipale extends JFrame {
 	private int dificultad = 1;
 	private Top10 top10;
 	private JComboBox<String> tamanho;
+	private int pastTamanho;
 
 	
 	
@@ -88,23 +89,17 @@ public class interfazPrincipale extends JFrame {
 		tablero.desordenar(dificultad * 10);
 		panelC.actualizarTablero(tablero);
 	}
-	public void cambiarTamanhoTablero(int nuevoTamanho) {
-		this.tamanhoTablero = nuevoTamanho;
-		tablero = new Tablero(tamanhoTablero);
-		
-		panelC.actualizarTablero(tablero);
-		
-		revalidate();
-		repaint();
-		
-		
-		revalidate();
-		repaint();
+	public void CambiarTamanho(int pTamanoTablero) {
+		pastTamanho = tamanhoTablero;
+		panelC.cambiarTamanhoTablero(tamanhoTablero);
+		tamanhoTablero = pTamanoTablero + 5;
+		reiniciarJuego();
 	}
 	
 	public void cambiardificultad(int nuevaDificultad) {
 		this.dificultad = nuevaDificultad;
 		tablero.desordenar(dificultad * 10);
+		reiniciarJuego();
 		
 	}
 	

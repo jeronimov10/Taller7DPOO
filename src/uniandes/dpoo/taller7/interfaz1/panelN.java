@@ -94,11 +94,10 @@ public class panelN extends JPanel implements ActionListener {
 		
 		}
 		
-		if (e.getSource() == tamanho) {
-			String seleccion = (String) tamanho.getSelectedItem();
-			int nuevoTamanho = Integer.parseInt(seleccion.split("x")[0]);
-			mainFrame.cambiarTamanhoTablero(nuevoTamanho);
-			
+		if (e.getSource() == tamanho){
+			int tam = tamanho.getSelectedIndex();
+			mainFrame.CambiarTamanho(tam);
+			mainFrame.reiniciarJuego();
 		}
 	}
 	

@@ -78,6 +78,14 @@ public class panelC extends JPanel implements MouseListener {
 	    }
 	}
 	
+	
+	public void cambiarTamanhoTablero(int tamanho) {
+		removeAll();
+		this.tablero = new Tablero(tamanho);
+		crearTablero(cambioEstadoI);
+		revalidate();
+		repaint();
+	}
     private void actualizarMouseListeners() {
         for (Component componente : getComponents()) {
             if (componente instanceof Casilla) {
