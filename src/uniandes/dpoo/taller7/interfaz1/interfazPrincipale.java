@@ -35,7 +35,7 @@ public class interfazPrincipale extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 		
-		
+		NombreInicial();
 		
 		panelN = new panelN(this);
 		add(panelN,BorderLayout.NORTH);
@@ -48,7 +48,7 @@ public class interfazPrincipale extends JFrame {
 		add(panelS, BorderLayout.SOUTH);
 		
 		top10 = new Top10();
-		NombreInicial();
+		
 		
 	
 		

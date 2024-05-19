@@ -1,10 +1,15 @@
 package uniandes.dpoo.taller7.interfaz1;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.RoundRectangle2D;
@@ -15,6 +20,7 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 import uniandes.dpoo.taller7.modelo.Tablero;
 
@@ -39,55 +45,58 @@ public class panelC extends JPanel implements MouseListener {
 	
 	
 	
+	
 	public panelC(Tablero tablero, int tamanhoT) {
 		this.tablero = tablero;
 		this.cambioEstadoI = new cambioEstado(tablero);
-		crearTablero();
-		Listeners();
+		cambioEstadoI = new cambioEstado(tablero);
+		crearTablero(cambioEstadoI);
+		actualizarMouseListeners();
 		
 
 	}
 	
 
-	public void crearTablero() {
-		int tamanhoT = tablero.darTablero().length;
-		setLayout(new GridLayout(tamanhoT, tamanhoT));
-		boolean [][] matrizTablero = tablero.darTablero();
-		
-		Random random = new Random();
-		
-		for (int i = 0; i < tamanhoT; i++) { 
-			 for (int j = 0; j < tamanhoT; j++) { 
-				 matrizTablero[i][j] = random.nextBoolean();
-			 }
-		}
-		
-		
-		for (int i = 0; i < tamanhoT; i++) { 
-			 for (int j = 0; j < tamanhoT; j++) { 
-				 Casilla c = new Casilla(i,j, matrizTablero[i][j]);
-				 add(c);
-			 }
-		}
-		
+	public void crearTablero(cambioEstado cambioEstadoI) {
+	    int tamanhoT = tablero.darTablero().length;
+	    setLayout(new GridLayout(tamanhoT, tamanhoT));
+	    boolean[][] matrizTablero = tablero.darTablero();
+	    
+	    Random random = new Random();
+	    
+	    for (int i = 0; i < tamanhoT; i++) {
+	        for (int j = 0; j < tamanhoT; j++) {
+	            matrizTablero[i][j] = random.nextBoolean();
+	        }
+	    }
+	    
+	    for (int i = 0; i < tamanhoT; i++) {
+	        for (int j = 0; j < tamanhoT; j++) {
+	            Casilla c = new Casilla(i, j, matrizTablero[i][j], cambioEstadoI);
+	            add(c);
+	        }
+	    }
 	}
 	
-	private void Listeners() {
-		for (int i = 0; i < getComponentCount(); i++) {
-			Casilla c = (Casilla) getComponent(i);
-			c.addMouseListener(this);
-		}
-	}
+    private void actualizarMouseListeners() {
+        for (Component componente : getComponents()) {
+            if (componente instanceof Casilla) {
+                Casilla casilla = (Casilla) componente;
+                casilla.addMouseListener(this);
+            }
+        }
+    }
 	
 	
 	
 	public void actualizarTablero(Tablero nuevoTablero) {
-		this.tablero = nuevoTablero;
-		removeAll();
-		crearTablero();
-		revalidate();
-		repaint();
-		
+	    this.tablero = nuevoTablero;
+	    removeAll();
+	    crearTablero(cambioEstadoI);
+	    revalidate();
+	    repaint();
+	    actualizarMouseListeners();
+	    actualizarEstadoVi();
 	}
 	
 	public void victoria(Tablero nuevotablero) {
@@ -96,6 +105,15 @@ public class panelC extends JPanel implements MouseListener {
 		if (opcion == JOptionPane.YES_OPTION) {
 			nuevotablero.reiniciar();
 			actualizarTablero(nuevotablero);
+		}
+	}
+	
+	public void actualizarEstadoVi() {
+		for (Component componente: getComponents()) {
+			if (componente instanceof Casilla) {
+				Casilla casilla = (Casilla) componente;
+				casilla.actualizarEstadoV();
+			}
 		}
 	}
 	
@@ -144,37 +162,63 @@ public class panelC extends JPanel implements MouseListener {
 		
 	}
 	
-	private class Casilla extends JPanel {
+	private class Casilla extends JToggleButton {
 		private int fila;
 		private int columna;
 		private boolean encendida;
-		private JLabel labelIcono;
+		private ImageIcon Icono;
+		private cambioEstado cambioEstadoI;
 		
 		
-		public Casilla(int fila, int columna, boolean encendida) {
+		
+		
+		public Casilla(int fila, int columna, boolean encendida, cambioEstado cambioEstadoI) {
 			this.fila = fila;
 			this.columna = columna;
 			this.encendida = encendida;
+			this.cambioEstadoI = cambioEstadoI;
 			
 			
-			labelIcono = new JLabel();
+			
+			
+			setPreferredSize(new Dimension(50,50));
 			actualizarEstadoV();
-			add(labelIcono);
+			
+	        addMouseListener(new MouseAdapter() {
+	            @Override
+	            public void mouseClicked(MouseEvent e) {
+	                cambiarEstado();
+	                cambioEstadoI.cambiarEstadoCasillaAdyacente(fila, columna); 
+	                if (cambioEstadoI.win()) {
+	                    JOptionPane.showMessageDialog(null, "¡Ganaste y recibiste 1 punto!");
+	                }
+	            }
+	        });
+			
+	
+		
 			
 			
 			
 			
 }
+
 		
 		private void actualizarEstadoV() {
 			if (encendida) {
 				setBackground(Color.YELLOW);
-				labelIcono.setIcon(luz);
+				Icono = new ImageIcon("data/luz.png");
 				
 			} else {
 				setBackground(new Color(10,10,10));
-				labelIcono.setIcon(luz);
+				Icono = new ImageIcon("data/luz.png");
 			}
+			setIcon(Icono);
+		}
+		
+		private void cambiarEstado() {
+			setSelected(!isSelected());
+
 		}
 			
 			
