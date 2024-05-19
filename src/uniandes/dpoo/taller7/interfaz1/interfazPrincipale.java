@@ -35,9 +35,9 @@ public class interfazPrincipale extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 		
-		NombreInicial();
 		
-		panelN = new panelN();
+		
+		panelN = new panelN(this);
 		add(panelN,BorderLayout.NORTH);
 		tablero = new Tablero(5);
 		panelC = new panelC(tablero, tamanhoTablero);
@@ -48,6 +48,7 @@ public class interfazPrincipale extends JFrame {
 		add(panelS, BorderLayout.SOUTH);
 		
 		top10 = new Top10();
+		NombreInicial();
 		
 	
 		
@@ -81,11 +82,20 @@ public class interfazPrincipale extends JFrame {
 		
 		
 	}
+	
+	public void reiniciarJuego() {
+		tablero = new Tablero(tamanhoTablero);
+		tablero.desordenar(dificultad * 10);
+		panelC.actualizarTablero(tablero);
+	}
 	public void cambiarTamanhoTablero(int nuevoTamanho) {
 		this.tamanhoTablero = nuevoTamanho;
 		tablero = new Tablero(tamanhoTablero);
 		
-		panelC.crearTablero();
+		panelC.actualizarTablero(tablero);
+		
+		revalidate();
+		repaint();
 		
 		
 		revalidate();

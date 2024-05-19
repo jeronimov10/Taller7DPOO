@@ -11,6 +11,7 @@ import uniandes.dpoo.taller7.modelo.Top10;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -25,6 +26,7 @@ public class panelE extends JPanel implements ActionListener {
 	private JButton Top10;
 	private JButton ChangeJugador;
 	private interfazPrincipale mainFrame;
+	private JComboBox<String> tamanho;
 	
 	
 	
@@ -32,6 +34,7 @@ public class panelE extends JPanel implements ActionListener {
 	
 	public panelE(interfazPrincipale mainFrame) {
 		this.mainFrame = mainFrame;
+		this.tamanho = tamanho;
 		
 		
 		setLayout(new GridLayout(9, 1));
@@ -82,6 +85,8 @@ public class panelE extends JPanel implements ActionListener {
 			
 			
 			
+		} else if (e.getSource() == Reinciar) {
+			mainFrame.reiniciarJuego();
 		}
 			
 		

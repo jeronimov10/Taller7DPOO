@@ -15,14 +15,24 @@ public class panelN extends JPanel implements ActionListener {
 	JRadioButton LMDP;
 	JRadioButton LHDP;
 	JRadioButton EP;
+	private interfazPrincipale mainFrame;
+	private JComboBox<String> tamanho;
 	
 	
-	public panelN() {
+	
+	public panelN(interfazPrincipale mainFrame) {
+		this.mainFrame = mainFrame;
+		
+		
+		
 		setLayout(new GridLayout(1,8));
 		setBackground(new Color(41,137,223));
-		add(new JLabel(" "));
-		add (new JLabel("Tamaño: "));
-		JComboBox<String> tamanho = new JComboBox<String>();
+		
+		JLabel label = new JLabel("tamaño");
+		add(label);
+		
+
+		tamanho = new JComboBox<>();
 		
 		tamanho.addItem(" 5 x 5 ");
 		tamanho.addItem(" 6 x 6 ");
@@ -30,6 +40,7 @@ public class panelN extends JPanel implements ActionListener {
 		tamanho.addItem(" 8 x 8 ");
 		tamanho.addItem(" 9 x 9 ");
 		tamanho.addItem(" 10 x 10 ");
+		tamanho.addActionListener(this);
 		
 		add (tamanho);
 		
@@ -79,10 +90,15 @@ public class panelN extends JPanel implements ActionListener {
 			LMDP.setSelected(false);
 			LHDP.setSelected(false);
 			EP.setSelected(true);
-			
-			
 		
 		
+		}
+		
+		if (e.getSource() == tamanho) {
+			String seleccion = (String) tamanho.getSelectedItem();
+			int nuevoTamanho = Integer.parseInt(seleccion.split("x")[0]);
+			mainFrame.cambiarTamanhoTablero(nuevoTamanho);
+			
 		}
 	}
 	
