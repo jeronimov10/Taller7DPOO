@@ -46,6 +46,10 @@ public class panelS extends JPanel {
 		nombreJugador.setText(nuevoNombre);
 	}
 	
+	   public void actualizarJugadas(int jugadas) {
+	        valorJugadas.setText(String.valueOf(jugadas));
+	    }
+	   
 
 	
 	

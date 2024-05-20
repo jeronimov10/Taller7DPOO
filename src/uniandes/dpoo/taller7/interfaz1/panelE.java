@@ -38,7 +38,9 @@ public class panelE extends JPanel implements ActionListener {
 	
 	public panelE(interfazPrincipale mainFrame) {
 		this.mainFrame = mainFrame;
-		this.tamanho = tamanho;
+		this.panelc = panelc;
+		
+		
 		
 		
 		setLayout(new GridLayout(9, 1));
@@ -91,12 +93,14 @@ public class panelE extends JPanel implements ActionListener {
 			
 		} else if (e.getSource() == Reinciar) {
 			mainFrame.reiniciarJuego();
-		} else if(e.getSource()== Nuevo) {
-			panelc.crearTablero(cambioEstadoI);
+
 			
-			
+		}else if(e.getSource() == Nuevo) {
+			mainFrame.nuevoJuego();
 			
 		}
+		
+	
 			
 		
 		

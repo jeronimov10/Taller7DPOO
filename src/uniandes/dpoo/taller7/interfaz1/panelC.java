@@ -25,6 +25,7 @@ import javax.swing.JToggleButton;
 import uniandes.dpoo.taller7.modelo.Tablero;
 
 import uniandes.dpoo.taller7.interfaz1.cambioEstado;
+import uniandes.dpoo.taller7.interfaz1.panelS;
 
 
 
@@ -38,6 +39,8 @@ public class panelC extends JPanel implements MouseListener {
 	private Tablero tablero;
 	private ImageIcon luz = new ImageIcon("data/luz.png");
 	private cambioEstado cambioEstadoI;
+	private int jugadas;
+	private panelS panelS;
 	
 	
 	
@@ -46,9 +49,12 @@ public class panelC extends JPanel implements MouseListener {
 	
 	
 	
-	public panelC(Tablero tablero, int tamanhoT) {
+	public panelC(Tablero tablero, int tamanhoT, panelS panelS) {
 		this.tablero = tablero;
 		this.cambioEstadoI = new cambioEstado(tablero);
+		this.panelS = panelS;
+		this.jugadas = 0;
+		
 		cambioEstadoI = new cambioEstado(tablero);
 		crearTablero(cambioEstadoI);
 		actualizarMouseListeners();
@@ -78,6 +84,7 @@ public class panelC extends JPanel implements MouseListener {
 	    }
 	}
 	
+
 	
 	public void cambiarTamanhoTablero(int tamanho) {
 		removeAll();
@@ -125,6 +132,14 @@ public class panelC extends JPanel implements MouseListener {
 		}
 	}
 	
+	public void incrementarJugadas() {
+		jugadas ++;
+	}
+	public int getjugadas() {
+		
+		return jugadas;
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() instanceof Casilla) { 
@@ -132,6 +147,8 @@ public class panelC extends JPanel implements MouseListener {
 			int fila = c.getFila();
 			int columna = c.getColumna();
 			cambioEstadoI.cambiarEstadoCasillaAdyacente(fila, columna);
+			incrementarJugadas();
+			panelS.actualizarJugadas(jugadas);
 			actualizarTablero(tablero);
 			
 			if (cambioEstadoI.win()) {
@@ -198,7 +215,7 @@ public class panelC extends JPanel implements MouseListener {
 	                cambiarEstado();
 	                cambioEstadoI.cambiarEstadoCasillaAdyacente(fila, columna); 
 	                if (cambioEstadoI.win()) {
-	                    JOptionPane.showMessageDialog(null, "¡Ganaste y recibiste 1 punto!");
+	                    JOptionPane.showMessageDialog(null, "¡Ganaste, recibiste 1 punto!");
 	                }
 	            }
 	        });

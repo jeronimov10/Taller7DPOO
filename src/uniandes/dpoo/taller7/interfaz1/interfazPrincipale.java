@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JComboBox;
 import uniandes.dpoo.taller7.modelo.Tablero;
 import uniandes.dpoo.taller7.modelo.Top10;
+import uniandes.dpoo.taller7.interfaz1.panelS;
 
 
 public class interfazPrincipale extends JFrame {
@@ -38,15 +39,17 @@ public class interfazPrincipale extends JFrame {
 		
 		NombreInicial();
 		
+		
+		panelS = new panelS(Njugador);
+		add(panelS, BorderLayout.SOUTH);
 		panelN = new panelN(this);
 		add(panelN,BorderLayout.NORTH);
 		tablero = new Tablero(5);
-		panelC = new panelC(tablero, tamanhoTablero);
+		panelC = new panelC(tablero, tamanhoTablero, panelS);
 		add(panelC, BorderLayout.CENTER);
 		panelE = new panelE(this);
 		add (panelE, BorderLayout.EAST);
-		panelS = new panelS(Njugador);
-		add(panelS, BorderLayout.SOUTH);
+
 		
 		top10 = new Top10();
 		
@@ -117,6 +120,21 @@ public class interfazPrincipale extends JFrame {
 	public Top10 getTop10() {
 		
 		return top10;
+	}
+	
+	public void nuevoJuego(){
+		
+		DialogoCambiarJugador nombre = new DialogoCambiarJugador(this);
+		nombre.setVisible(true);
+		
+		if (nombre.Aceptado()) {
+			Njugador = nombre.getNombreJugador();
+		} else {
+			Njugador = "Jugador";
+		}
+		
+		reiniciarJuego();
+		panelS.actualizarNombreJugador(Njugador);
 	}
 
 
