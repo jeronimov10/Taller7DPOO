@@ -12,10 +12,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,7 +26,7 @@ import javax.swing.JToggleButton;
 
 import uniandes.dpoo.taller7.modelo.Tablero;
 
-import uniandes.dpoo.taller7.interfaz1.cambioEstado;
+
 import uniandes.dpoo.taller7.interfaz1.panelS;
 
 
@@ -34,134 +36,132 @@ import uniandes.dpoo.taller7.interfaz1.panelS;
 
 public class panelC extends JPanel implements MouseListener {
 	
-	int tamanhoT;
+	private int tamanhoT;
+	
+	private float posX = 0;
+	private float posY = 0;
+	private float tamX;
+	private float tamY;
 	
 	private Tablero tablero;
 	private ImageIcon luz = new ImageIcon("data/luz.png");
-	private cambioEstado cambioEstadoI;
+	
 	private int jugadas;
 	private panelS panelS;
+	private interfazPrincipale mainFrame;
+	private RoundRectangle2D[][] casillasB;
+	private RoundRectangle2D[][] contorno;
 	
 	
 	
 	
 	
-	
-	
-	
-	public panelC(Tablero tablero, int tamanhoT, panelS panelS) {
+	public panelC(Tablero tablero, int tamanhoT, panelS panelS, interfazPrincipale mainFrame) {
 		this.tablero = tablero;
-		this.cambioEstadoI = new cambioEstado(tablero);
+		this.tamanhoT = tamanhoT;
 		this.panelS = panelS;
+		this.mainFrame = mainFrame;
 		this.jugadas = 0;
+		tablero = new Tablero(tamanhoT);
+		tablero.desordenar(3);
+		crearTablero(tablero);
 		
-		cambioEstadoI = new cambioEstado(tablero);
-		crearTablero(cambioEstadoI);
-		actualizarMouseListeners();
 		
 
 	}
 	
 
-	public void crearTablero(cambioEstado cambioEstadoI) {
-	    int tamanhoT = tablero.darTablero().length;
-	    setLayout(new GridLayout(tamanhoT, tamanhoT));
-	    boolean[][] matrizTablero = tablero.darTablero();
-	    
-	    Random random = new Random();
-	    
-	    for (int i = 0; i < tamanhoT; i++) {
-	        for (int j = 0; j < tamanhoT; j++) {
-	            matrizTablero[i][j] = random.nextBoolean();
-	        }
-	    }
-	    
-	    for (int i = 0; i < tamanhoT; i++) {
-	        for (int j = 0; j < tamanhoT; j++) {
-	            Casilla c = new Casilla(i, j, matrizTablero[i][j], cambioEstadoI);
-	            add(c);
-	        }
-	    }
+	public void crearTablero(Tablero tablero) {
+		tamX = 500/tamanhoT;
+		tamY = 500/tamanhoT;
+		setLayout(new GridLayout(tamanhoT, tamanhoT));
+		boolean[][] tab = tablero.darTablero();
+		casillasB = new RoundRectangle2D[tamanhoT][tamanhoT];
+		contorno = new RoundRectangle2D[tamanhoT][tamanhoT];
+		Icon icono = new ImageIcon(luz.getImage().getScaledInstance((int)tamX-5, (int)tamY-5, Image.SCALE_DEFAULT));
+		 for (int i = 0; i < tamanhoT; i++) {
+		        for (int j = 0; j < tamanhoT; j++) {
+		        	casillasB[i][j] = new RoundRectangle2D.Double(posX + (j * tamX), posY + (i * tamY), tamX, tamY, 15, 15);
+		        	contorno[i][j] = new RoundRectangle2D.Double(posX + (j * tamX), posY + (i * tamY), tamX, tamY, 15, 15);
+		        	//setBackground(Color.YELLOW);
+		        	if(!tab[i][j]) {
+		        		//setBackground(new Color(10,10,10));
+		        	}
+		        	JLabel iconoLuz = new JLabel();
+		    		iconoLuz.setIcon(icono);
+		        	add(iconoLuz);
+		        }
+		    }
+		
+		
+		
 	}
 	
 
 	
 	public void cambiarTamanhoTablero(int tamanho) {
 		removeAll();
-		this.tablero = new Tablero(tamanho);
-		crearTablero(cambioEstadoI);
+		this.tamanhoT = tamanho;
+		Tablero newTablero = new Tablero(tamanho);
+		crearTablero(newTablero);
 		revalidate();
 		repaint();
 	}
-    private void actualizarMouseListeners() {
-        for (Component componente : getComponents()) {
-            if (componente instanceof Casilla) {
-                Casilla casilla = (Casilla) componente;
-                casilla.addMouseListener(this);
-            }
-        }
-    }
+
 	
-	
-	
+
 	public void actualizarTablero(Tablero nuevoTablero) {
 	    this.tablero = nuevoTablero;
 	    removeAll();
-	    crearTablero(cambioEstadoI);
+	    crearTablero(tablero);
 	    revalidate();
 	    repaint();
-	    actualizarMouseListeners();
-	    actualizarEstadoVi();
+	    
+	    
 	}
 	
-	public void victoria(Tablero nuevotablero) {
-		JOptionPane.showMessageDialog(this, "You won","Victoria", JOptionPane.INFORMATION_MESSAGE);
-		int opcion = JOptionPane.showConfirmDialog(this, "Desea jugar otra vez?", "reiniciar", JOptionPane.YES_NO_OPTION);
-		if (opcion == JOptionPane.YES_OPTION) {
-			nuevotablero.reiniciar();
-			actualizarTablero(nuevotablero);
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D)g;
+		
+		for (int i = 0; i < tamanhoT; i++) {
+			for (int j = 0; j < tamanhoT; j++) {
+				if (tablero.darTablero()[i][j]) {
+					g2.setColor(Color.YELLOW);
+				}else {
+					g2.setColor(new Color(10,10,10));
+				}
+				g2.draw(casillasB[i][j]);
+				g2.fill(casillasB[i][j]);
+			}
 		}
-	}
-	
-	public void actualizarEstadoVi() {
-		for (Component componente: getComponents()) {
-			if (componente instanceof Casilla) {
-				Casilla casilla = (Casilla) componente;
-				casilla.actualizarEstadoV();
+		g2.setColor(new Color(10,10,10));
+		for (int ind = 0; ind < contorno.length; ind++) {
+			for (int ind2 = 0; ind2 < contorno.length; ind2++) {
+				g2.draw(contorno[ind][ind2]);
 			}
 		}
 	}
-	
-	public void incrementarJugadas() {
-		jugadas ++;
-	}
-	public int getjugadas() {
-		
-		return jugadas;
-	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getSource() instanceof Casilla) { 
-			Casilla c = (Casilla) e.getSource();
-			int fila = c.getFila();
-			int columna = c.getColumna();
-			cambioEstadoI.cambiarEstadoCasillaAdyacente(fila, columna);
-			incrementarJugadas();
-			panelS.actualizarJugadas(jugadas);
-			actualizarTablero(tablero);
-			
-			if (cambioEstadoI.win()) {
-				victoria(tablero);
-			}
-
-			
-
-		}
-		
+		int click_x = e.getX();
+		int click_y = e.getY();
+		int[] casilla = convertirCoordenadasACasilla(click_x, click_y);
+		tablero.jugar(casilla[0], casilla[1]);
+		repaint();
 	}
 	
-
+	private int[] convertirCoordenadasACasilla(int x, int y){
+		int ladoTablero = tablero.darTablero().length;
+		int altoPanelTablero = getHeight();
+		int anchoPanelTablero = getWidth();
+		int altoCasilla = altoPanelTablero / ladoTablero;
+		int anchoCasilla = anchoPanelTablero / ladoTablero;
+		int fila = (int) (y / altoCasilla);
+		int columna = (int) (x / anchoCasilla);
+		return new int[] { fila, columna };
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -186,86 +186,6 @@ public class panelC extends JPanel implements MouseListener {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	private class Casilla extends JToggleButton {
-		private int fila;
-		private int columna;
-		private boolean encendida;
-		private ImageIcon Icono;
-		private cambioEstado cambioEstadoI;
-		
-		
-		
-		
-		public Casilla(int fila, int columna, boolean encendida, cambioEstado cambioEstadoI) {
-			this.fila = fila;
-			this.columna = columna;
-			this.encendida = encendida;
-			this.cambioEstadoI = cambioEstadoI;
-			
-			
-			
-			
-			setPreferredSize(new Dimension(50,50));
-			actualizarEstadoV();
-			
-	        addMouseListener(new MouseAdapter() {
-	            @Override
-	            public void mouseClicked(MouseEvent e) {
-	                cambiarEstado();
-	                cambioEstadoI.cambiarEstadoCasillaAdyacente(fila, columna); 
-	                if (cambioEstadoI.win()) {
-	                    JOptionPane.showMessageDialog(null, "¡Ganaste, recibiste 1 punto!");
-	                }
-	            }
-	        });
-			
-	
-		
-			
-			
-			
-			
-}
-
-		
-		private void actualizarEstadoV() {
-			if (encendida) {
-				setBackground(Color.YELLOW);
-				Icono = new ImageIcon("data/luz.png");
-				
-			} else {
-				setBackground(new Color(10,10,10));
-				Icono = new ImageIcon("data/luz.png");
-			}
-			setIcon(Icono);
-		}
-		
-		private void cambiarEstado() {
-			setSelected(!isSelected());
-
-		}
-			
-			
-		
-		
-		protected void pintar (Graphics g) {
-			super.paint(g);
-			if (!encendida) {
-				g.setColor(Color.BLACK);
-				g.fillRect(0, 0, getWidth(), getHeight());
-			}
-		}
-		public int getFila() {
-			return fila;
-			
-		}
-		
-		public int getColumna() {
-			return columna;
-		}
-	}
-	
 	
 
 }

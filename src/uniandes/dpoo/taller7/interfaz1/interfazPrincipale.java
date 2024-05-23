@@ -45,7 +45,7 @@ public class interfazPrincipale extends JFrame {
 		panelN = new panelN(this);
 		add(panelN,BorderLayout.NORTH);
 		tablero = new Tablero(5);
-		panelC = new panelC(tablero, tamanhoTablero, panelS);
+		panelC = new panelC(tablero, tamanhoTablero, panelS, this);
 		add(panelC, BorderLayout.CENTER);
 		panelE = new panelE(this);
 		add (panelE, BorderLayout.EAST);
